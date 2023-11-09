@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { getData, updateData } from "../../../services/axios.service";
 import Loader from "../../../components/Loader";
 import moment from "moment";
+import ReactPaginate from "react-paginate";
 
 import { FaEdit } from "react-icons/fa";
 import { AiFillDelete } from "react-icons/ai";
@@ -45,6 +46,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const Products = () => {
   const [products, setProducts] = useState<any>({});
   const [isSpinning, setIsSpinning] = useState(false);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+
+  let itemsPerPage = 4;
   const [product, setProduct] = useState<any>({
     name: "",
     brand: "",
@@ -59,6 +64,7 @@ const Products = () => {
 
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
+  const [originalProduct, setOriginalProduct] = useState<any>({});
 
   const { jwt } = useSelector((state: any) => state.auth);
 
@@ -66,12 +72,34 @@ const Products = () => {
     setIsLoading(true);
     const resp = await getData("/product");
     setProducts(resp.data);
+    setOriginalProduct(resp.data);
+    paginate(resp.data);
+
     const newCategories = resp.data.results.map((result: any) => {
       return result.category;
     });
     setCategories([...new Set(newCategories)]);
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (originalProduct.status === "success") {
+      paginate(originalProduct);
+    }
+  }, [itemOffset]);
+
+  function paginate(items: any) {
+    const endOffset = itemOffset + itemsPerPage;
+    //generate data according to items per page
+    const currentItems = items.results.slice(itemOffset, endOffset);
+
+    //calculate total pages
+    setPageCount(Math.ceil(items.results.length / itemsPerPage));
+
+    setProducts((prev: any) => {
+      return { ...prev, results: currentItems, count: currentItems.length };
+    });
+  }
 
   const deleteProduct = async (id: string) => {
     try {
@@ -207,6 +235,12 @@ const Products = () => {
     setProduct(product);
   };
 
+  const handlePageChange = (event: any) => {
+    const newOffset =
+      (event.selected * itemsPerPage) % originalProduct.results.length;
+    setItemOffset(newOffset);
+  };
+
   return (
     <TableContainer component={Paper}>
       {isLoading ? (
@@ -293,6 +327,27 @@ const Products = () => {
             edit={edit}
             product={product}
           />
+          {pageCount > 1 && (
+            <ReactPaginate
+              previousLabel="Previous"
+              nextLabel="Next"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakLabel="..."
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageChange}
+              containerClassName="pagination"
+              activeClassName="active"
+            />
+          )}
         </Container>
       )}
     </TableContainer>
