@@ -96,9 +96,9 @@ const Products = () => {
     //calculate total pages
     setPageCount(Math.ceil(items.results.length / itemsPerPage));
 
-    setProducts((prev: any) => {
-      return { ...prev, results: currentItems, count: currentItems.length };
-    });
+    // setProducts((prev: any) => {
+    //   return { ...prev, results: currentItems, count: currentItems.length };
+    // });
   }
 
   const deleteProduct = async (id: string) => {
