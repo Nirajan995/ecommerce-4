@@ -15,6 +15,7 @@ const productSlice = createSlice({
         (item: any) => item.productId === data.payload.productId
       );
       if (existProduct) {
+        // const totalItem = item.qty + data.payload.qty
         state.cartItem = state.cartItem.map((item: any) =>
           item.productId === data.payload.productId ? data.payload : item
         );
@@ -22,9 +23,18 @@ const productSlice = createSlice({
         state.cartItem = [...state.cartItem, data.payload];
       }
     },
+    removeFromCart: (state: any, data: any) => {
+      state.cartItem = state.cartItem.filter((cart: any) => {
+        return cart.productId !== data.payload;
+      });
+    },
+    setShippingAddress: (state: any, data: any) => {
+      state.shippingAddress = data.payload;
+    },
   },
 });
 
 export default productSlice.reducer;
 
-export const { addToCart } = productSlice.actions;
+export const { addToCart, removeFromCart, setShippingAddress } =
+  productSlice.actions;
