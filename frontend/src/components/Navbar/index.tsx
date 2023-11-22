@@ -8,6 +8,8 @@ import { BsFillCartCheckFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../slice/authSlice";
 import { successToast } from "../../services/toaster.service";
+import { resetCart } from "../../slice/productSlice";
+import { resetOrder } from "../../slice/orderSlice";
 
 function NavbarComponent() {
   const { name, role } = useSelector((state: any) => state.auth);
@@ -17,6 +19,8 @@ function NavbarComponent() {
   const logoutHandler = () => {
     localStorage.removeItem("persist:root");
     dispatch(logout());
+    dispatch(resetCart());
+    dispatch(resetOrder());
     successToast("Logged out successfully");
   };
   return (

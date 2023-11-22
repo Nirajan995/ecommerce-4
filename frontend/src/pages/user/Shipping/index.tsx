@@ -2,20 +2,22 @@ import { useState } from "react";
 
 import { Button, Form } from "react-bootstrap";
 import { Container, TextField } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setShippingAddress } from "../../../slice/productSlice";
 
 const Shipping = ({ setActiveStep }: any) => {
-  const [shippingData, setShippingData] = useState<any>({
-    address: "",
-    city: "",
-    postalCode: "",
-    country: "",
-  });
+  const shpData = useSelector((state: any) => state.product.shippingAddress);
+
+  const [shippingData, setShippingData] = useState<any>(shpData);
 
   const dispatch = useDispatch();
 
   function handleChange(e: any) {
+    let data = {
+      ...shippingData,
+      [e.target.name]: e.target.value,
+    };
+    dispatch(setShippingAddress(data));
     setShippingData((prev: any) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
@@ -37,6 +39,7 @@ const Shipping = ({ setActiveStep }: any) => {
             type="text"
             className="mt-2"
             name="address"
+            value={shpData.address}
             onChange={handleChange}
           />
           <TextField
@@ -44,6 +47,7 @@ const Shipping = ({ setActiveStep }: any) => {
             label="Enter City"
             type="text"
             className="mt-2"
+            value={shpData.city}
             name="city"
             onChange={handleChange}
           />
@@ -52,6 +56,7 @@ const Shipping = ({ setActiveStep }: any) => {
             label="Enter Postal Code"
             type="number"
             className="mt-2"
+            value={shpData.postalCode}
             name="postalCode"
             onChange={handleChange}
           />
@@ -59,6 +64,7 @@ const Shipping = ({ setActiveStep }: any) => {
             fullWidth
             label="Enter Country"
             type="text"
+            value={shpData.country}
             className="mt-2"
             name="country"
             onChange={handleChange}

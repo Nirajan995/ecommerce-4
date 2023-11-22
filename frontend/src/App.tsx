@@ -13,6 +13,7 @@ import Shipping from "./pages/user/Shipping";
 import PaymentMethod from "./pages/user/PaymentMethod";
 import CheckoutState from "./context/CheckoutState";
 import ParentContainer from "./pages/user/ParentContainer";
+import Success from "./pages/Success";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           />
 
           <Route path="/products/:productId" element={<ProductDetail />} />
+          <Route path="/payment/success" element={<Success />} />
         </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>
