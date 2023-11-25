@@ -35,7 +35,6 @@
 - [Material UI](https://material-ui.com/)
 - [React Bootstrap](https://react-bootstrap.github.io/)
 - [Redux](https://redux.js.org/)
-- [Tailwind]
 
 ## API :man_technologist:
 
